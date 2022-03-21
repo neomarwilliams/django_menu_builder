@@ -1,0 +1,15 @@
+.green {
+    background-color: #72CC50;
+    justify-content: space-between;
+    color: #FFFFFF;
+}
+
+.blue-background{
+    background-color: #00AEAD;
+    color: #FFFFFF;
+}
+
+.row {
+    padding-top: 35px;
+    padding-bottom: 30px;
+}

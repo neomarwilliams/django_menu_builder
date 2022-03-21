@@ -1,0 +1,73 @@
+.row {
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 25px;
+}
+
+.blue-background{
+    background-color: #00AEAD;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.nav-link {
+    color: #FFFFFF;
+}
+
+.green{
+    background-color: #72CC50;
+    color: #FFFFFF;
+    padding: 30px;
+}
+
+h3 {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding-top: 10px;
+}
+
+.line {
+    height: 1px;
+    background-color: #CC99FF;
+    margin-top: 50px;
+}
+.breakfast{
+    background-color: orange;
+    color: white;
+}
+
+.lunch{
+    background-color: orangered;
+    color: white;
+}
+
+.brunch{
+    background-color: lime;
+    color: white;
+}
+
+.dinner{
+    background-color: purple;
+    color: white;
+}
+
+.tea{
+    background-color: lemonchiffon;
+    color: gray;
+}
+
+.supper{
+    background-color: blue;
+    color: white;
+}
+
+.snack{
+    background-color: pink;
+    color: gray;
+}
+
+.tapas{
+    background-color: cadetblue;
+    color: white;
+}
+
