@@ -62,6 +62,7 @@ class MealTypeManager(models.Manager):
             errors['meal_type'] = 'Meal Type must include 2 or more characters'
         
         return errors
+        
 
 class MealType(models.Model):
     meal_name = models.CharField(max_length=45)

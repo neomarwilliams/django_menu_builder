@@ -24,6 +24,7 @@
 
 .nav-link {
     color: #FFFFFF;
+    text-decoration: none;
 }
 
 .blue-w-padding{
@@ -57,7 +58,13 @@ h3 {
 }
 
 #dashboard {
-    min-height: 600px;
+    min-height: 200px;
+}
+
+.day-card-header {
+    background-color: #BFD834;
+    /* background-color: #858e96; */
+    min-height: 20px;
 }
 
 .breakfast{

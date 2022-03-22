@@ -67,6 +67,32 @@ def delete_recipe(request, day_id, menu_id, recipe_id):
     return redirect('menu_builder', menu_id=current_menu.id)
 
 
+def card_tab_display(request, menu_id, day_id, meal_type_id):
+    current_menu = Menu.objects.get(id=menu_id)
+    current_day = Day.objects.get(id=day_id)
+    
+    days = Day.objects.filter(menu=current_menu)
+    recipes_by_day = current_day.recipes.all()
+    recipe_tab = []
+
+    for recipe in recipes_by_day:
+        recipe_sorter = recipe.meals.all()
+        for meal in recipe_sorter:
+            if meal == meal_type_id:
+                recipe_tab.push({recipe})
+        
+        return recipe_tab
+    
+    # recipes_by_day.objects.filter(meal_type_id=meal_type_id)
+
+
+    context = {
+        'current_menu': current_menu,
+        'days': days,
+        'recipe_tab' : recipe_tab,
+    }
+    return render(request, 'menu_builder.html', context)
+
 # def delete_day(request, day_id, menu_id):
 #     current_menu = Menu.objects.get(id=menu_id)
 #     to_delete = Day.objects.get(id=day_id)
