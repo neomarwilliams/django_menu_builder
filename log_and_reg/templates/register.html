@@ -11,9 +11,13 @@
 </head>
 <body>
     <div class="container-fluid">
+        <div class="green row navbar">
+        </div>
+        <div class=" row navbar blue-background">
+        </div>
         <div class="row">
             <div class="col-6">
-                <h1 class="blue-background">Registration</h1>
+                <h1>Registration</h1>
                 <form action="/register" method="post">
                     {% csrf_token %}
                     {% if messages %}

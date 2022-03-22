@@ -1,3 +1,7 @@
+.container-fluid {
+    padding-bottom: 100px;
+}
+
 .row {
     padding-left: 25px;
     padding-right: 25px;
@@ -67,43 +71,7 @@ h3 {
     min-height: 20px;
 }
 
-.breakfast{
-    background-color: orange;
-    color: white;
-}
-
-.lunch{
-    background-color: orangered;
-    color: white;
-}
-
-.brunch{
-    background-color: lime;
-    color: white;
-}
-
-.dinner{
-    background-color: purple;
-    color: white;
-}
-
-.tea{
-    background-color: lemonchiffon;
-    color: gray;
-}
-
-.supper{
-    background-color: blue;
-    color: white;
-}
-
-.snack{
-    background-color: pink;
-    color: gray;
-}
-
-.tapas{
-    background-color: cadetblue;
-    color: white;
+.recipe_link {
+    text-decoration: none;
 }
 

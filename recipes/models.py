@@ -67,6 +67,6 @@ class MealTypeManager(models.Manager):
 class MealType(models.Model):
     meal_name = models.CharField(max_length=45)
     recipes= models.ManyToManyField(Recipe, related_name='meals')
-    # days= models.ManyToManyField(Day, related_name='meals')
+    days= models.ManyToManyField(Day, related_name='meals')
     objects = MealTypeManager()
 

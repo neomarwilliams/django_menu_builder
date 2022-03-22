@@ -5,15 +5,12 @@ from log_and_reg.models import User
 from django.contrib import messages
 import bcrypt
 
-    # if 'userid' in request.session:
-    #     user_id=request.session['userid']
-    #     logged_user=User.objects.get(id=user_id)
-    # else:
-    #     return redirect('/')
 
-# site welcome views (3)
-# initial view if no one is logged in
 def recipes(request, menu_id, day_id):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
     current_menu = Menu.objects.get(id=menu_id)
     current_day = Day.objects.get(id=day_id)
 
@@ -24,19 +21,15 @@ def recipes(request, menu_id, day_id):
     return render(request, 'new_recipe.html', context)
 
 def create_recipe(request, day_id, menu_id):
-    errors = Recipe.objects.recipe_validator(request.POST)
 
-    if 'userid' in request.session:
-        user_id=request.session['userid']
-        logged_user=User.objects.get(id=user_id)
-    
-    else:
-        return redirect('log_in')
-    # user_id=request.session['userid']
+    if 'userid' not in request.session:
+        return redirect('/')
 
-    # logged_user=User.objects.get(id=user_id)
+
+    logged_user=User.objects.get(id=user_id)
     current_menu = Menu.objects.get(id = menu_id)
     current_day=Day.objects.get(id = day_id)
+    errors = Recipe.objects.recipe_validator(request.POST)
 
     if len(errors) > 0:
         for key, value in errors.items():
@@ -44,7 +37,7 @@ def create_recipe(request, day_id, menu_id):
         return redirect('new_recipe', menu_id = current_menu.id, day_id = current_day.id)
 
     else:
-
+        meal_type = request.POST.get('meal')
         new_recipe=Recipe.objects.create(
             title = request.POST.get('title'),
             link = request.POST.get('link'),
@@ -55,10 +48,16 @@ def create_recipe(request, day_id, menu_id):
         new_recipe.users.add(logged_user)
         new_recipe.meals.add(request.POST['meal'])
         new_recipe.menus.add(current_menu)
+        current_day.meals.add(meal_type)
+        
 
         return redirect('menu_builder', menu_id=current_menu.id)
 
 def delete_recipe(request, day_id, menu_id, recipe_id):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
     current_menu = Menu.objects.get(id=menu_id)
     current_day = Day.objects.get(id=day_id)
     recipe_to_delete = current_day.recipes.get(id=recipe_id)
@@ -68,18 +67,25 @@ def delete_recipe(request, day_id, menu_id, recipe_id):
 
 
 def card_tab_display(request, menu_id, day_id, meal_type_id):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
     current_menu = Menu.objects.get(id=menu_id)
     current_day = Day.objects.get(id=day_id)
+
+    Recipe.objects.filter(meals=meal_type_id)
     
-    days = Day.objects.filter(menu=current_menu)
+    # days = Day.objects.filter(menu=current_menu)
     recipes_by_day = current_day.recipes.all()
-    recipe_tab = []
+    recipe_tab = {}
 
     for recipe in recipes_by_day:
         recipe_sorter = recipe.meals.all()
         for meal in recipe_sorter:
             if meal == meal_type_id:
-                recipe_tab.push({recipe})
+                recipe_tab['recipe'] = recipe
+                print(recipe_tab)
         
         return recipe_tab
     
@@ -88,19 +94,9 @@ def card_tab_display(request, menu_id, day_id, meal_type_id):
 
     context = {
         'current_menu': current_menu,
-        'days': days,
+        # 'days': days,
         'recipe_tab' : recipe_tab,
     }
     return render(request, 'menu_builder.html', context)
 
-# def delete_day(request, day_id, menu_id):
-#     current_menu = Menu.objects.get(id=menu_id)
-#     to_delete = Day.objects.get(id=day_id)
-#     to_delete.delete()
-    
-#     return redirect('menu_builder', menu_id=current_menu.id)
-# Create your views here.
-# recipe, recipe type, photo
-# recipe CRUD           create, read, update, delete
-# recipe type CRUD      create, read, update, delete
-# photo CRUD            create, read, update, delete
+

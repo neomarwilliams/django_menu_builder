@@ -33,27 +33,36 @@
                 </ul>
             </div>
         </div>
-        <div class="navbar">
-            <div class="col-6">
-                <!-- logic to add user name -->
-                <h1>Welcome, User!</h1>
+        <div>
+            <div class="row">
+                <h6>{{current_menu.note}}</h6>
             </div>
-            <div class="col-6">
-                <ul>
-                    <li><a href="">My Account</a></li>
-                    <li><a href="">Home</a></li>
-                    <li><a href="">Shareables</a></li>
-                    <li><a href="">AddMenu</a></li>
-                    <li><a href="">MenuBuilder</a></li>
-                    <li><a href="">Calender</a></li>
-                </ul>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for day in days %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-header day-card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                {% for meal in day.meals.all %}
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="true" href="http://localhost:8000/recipes/{{current_menu.id}}/{{meal.id}}/{{day.id}}">{{meal.meal_name}}</a>
+                                </li>
+                                {% endfor %}
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Recipes:</h5>
+                                {% for key, val in recipe_tab %}
+                                <p class="card-text">{{recipe.title}}</p>
+                                <small class="card-text"><a href="{{recipe.link}}" class="recipe_link"></a>{{recipe.link}}</small>
+                                {% endfor %}
+                        </div>
+                        <div class="card-footer">
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
             </div>
         </div>
-        <div class="row">
-            <button>Edit Menu</button>
-            <button>Delete Menu</button>
-        </div>
-        <div class="row"></div>
     </div>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

@@ -1,4 +1,21 @@
+.row {
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 25px;
+}
+
 .blue-background{
     background-color: #00AEAD;
     color: #FFFFFF;
+    text-decoration: none;
+}
+
+.green{
+    background-color: #72CC50;
+    color: #FFFFFF;
+    padding: 30px;
+}
+
+.form-spacing {
+    padding-bottom: 10px;
 }

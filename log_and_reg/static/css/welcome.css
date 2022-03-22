@@ -1,7 +1,20 @@
 .green {
     background-color: #72CC50;
-    justify-content: space-between;
+    justify-content: center;
     color: #FFFFFF;
+    min-height: 300px;
+}
+
+#index {
+    padding-left: 100px;
+}
+
+h2
+
+.line {
+    height: 1px;
+    background-color: #CC99FF;
+    margin-bottom: 15px;
 }
 
 .blue-background{
@@ -12,4 +25,13 @@
 .row {
     padding-top: 35px;
     padding-bottom: 30px;
+}
+
+.nav-link {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.form-spacing {
+    padding-bottom: 10px;
 }
