@@ -54,6 +54,7 @@ def create_recipe(request, day_id, menu_id):
         new_recipe.recipe_types.add(request.POST['recipe_type'])
         new_recipe.users.add(logged_user)
         new_recipe.meals.add(request.POST['meal'])
+        new_recipe.menus.add(current_menu)
 
         return redirect('menu_builder', menu_id=current_menu.id)
 

@@ -4,16 +4,58 @@ from log_and_reg.models import User
 from recipes.models import Recipe
 from django.contrib import messages
 
-# function to add tags to a menu
-# make sure that the create day function associates with the menu that it belongs to
+# CRUD commands for menus, and day objects
+# CRUD commands for tags are commented out at the bottom of the page
 
-    # if 'userid' in request.session:
-    #     user_id=request.session['userid']
-    #     logged_user=User.objects.get(id=user_id)
-    # else:
-    #     return redirect('/')
-# Views to display main app pages
+
+# Create
+# Adds new menu object (acts as frame for day objects)
+def create_menu(request):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
+    errors = Menu.objects.menu_validator(request.POST)
+    if len(errors) > 0:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect('http://localhost:8000/menus/new')
+    else:
+        public_boolean = False
+        if(request.POST.get('is_public') == 1):
+            public_boolean = True
+        new_menu = Menu.objects.create (
+            menu_name = request.POST['menu_name'],
+            note = request.POST.get('note'),
+            is_public = public_boolean,
+        )
+        user_id=request.session['userid']
+        logged_user=User.objects.get(id=user_id)
+        new_menu.users.add(logged_user)
+        
+        return redirect('http://localhost:8000/menus/welcome/')
+
+# Adds new day object to menu
+def create_day(request, menu_id):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
+    current_menu = Menu.objects.get(id=menu_id)
+    new_day = Day.objects.create (
+        menu = current_menu
+    )
+
+    return redirect('menu_builder', menu_id=current_menu.id)
+
+
+# Read
+# shows home page
 def display_home(request):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
     user_id=request.session['userid']
     logged_user=User.objects.get(id=user_id)
 
@@ -21,12 +63,17 @@ def display_home(request):
         'logged_user': logged_user,
         'my_menus': logged_user.menus.all(),
         'my_recipes': logged_user.recipes.all(),
+
     }
-    # write a funciton that pulls the menus that are associated with logged user
-    # then write a for loop that finds the
+
     return render(request, 'home.html', context)
 
+# shows menu builder dashboard page
 def display_menu_builder(request, menu_id):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
     current_menu = Menu.objects.get(id=menu_id)
     days = Day.objects.filter(menu=current_menu)
     # days = current_menu.days.all()
@@ -36,102 +83,100 @@ def display_menu_builder(request, menu_id):
     }
     return render(request, 'menu_builder.html', context)
 
-# Views displaying forms
+# shows new menu form page
 def new_menu(request):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
     return render(request, 'new_menu.html')
 
-def new_tag(request):
-    return render(request, 'new_tag.html')
+# shows one menu with details on page
+def display_one_menu(request, menu_id):
 
+    if 'userid' not in request.session:
+        return redirect('/')
 
-# CRUD commands
-# Create
-def create_menu(request):
-    errors = Menu.objects.menu_validator(request.POST)
-    if len(errors) > 0:
-        for key, value in errors.items():
-            messages.error(request, value)
-        return redirect('http://localhost:8000/menus/new')
-    else:
-        new_menu = Menu.objects.create (
-            menu_name = request.POST['menu_name'],
-            note = request.POST.get('note'),
-            is_public = request.POST.get('is_puclic')
-        )
-        user_id=request.session['userid']
-        logged_user=User.objects.get(id=user_id)
-        new_menu.users.add(logged_user)
-        
-        return redirect('http://localhost:8000/menus/welcome/')
-
-def create_day(request, menu_id):
     current_menu = Menu.objects.get(id=menu_id)
-    new_day = Day.objects.create (
-        menu = current_menu
-    )
+    days = Day.objects.filter(menu=current_menu)
 
-    return redirect('menu_builder', menu_id=current_menu.id)
+    context = {
+        'current_menu': current_menu,
+        'days': days
+    }
 
-def create_tag(request, menu_id):
-    current_menu = Menu.objects.get(id=menu_id)
-    new_tag = Tag.objects.create (
-        tag_name = request.POST['tag_name']
-    )
-    new_tag.menus.add(current_menu)
-
-    return redirect('menu_builder', menu_id=current_menu.id)
+    return render(request, 'one_menu.html', context)
 
 
+# Update
+# displays edit form, prepopulated with current field values
 def edit_menu(request, menu_id):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
     current_menu = Menu.objects.get(id=menu_id)
     context = {
         'current_menu': current_menu
     }
     return render(request, 'edit_menu.html', context)
 
+# updates values in menu edit form
 def update_menu(request, menu_id):
+
+    if 'userid' not in request.session:
+        return redirect('/')
 
     to_update = Menu.objects.get(id=menu_id)
 
+    public_boolean = False
+    if(request.POST.get('is_public') == 1):
+        public_boolean = True
+
     to_update.menu_name = request.POST['menu_name']
     to_update.note = request.POST['note']
-    to_update.is_public = request.POST['is_public']
+    to_update.is_public = public_boolean
     to_update.save()
 
     return redirect('menu_builder', menu_id=to_update.id)
 
-# Read
-def get_one_menu(request):
-    pass
 
-def get_all_menus(request):
-    pass
-
-def get_one_day(request):
-    pass
-
-def get_all_days(request):
-    pass
-
-def get_one_tag(request):
-    pass
-
-def get_all_tags(request):
-    pass
-
-# Update
 # Delete
 def delete_day(request, day_id, menu_id):
-    create_menu = Menu.objects.get(id=menu_id)
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
+    current_menu = Menu.objects.get(id=menu_id)
     to_delete = Day.objects.get(id=day_id)
     to_delete.delete()
     
-    return redirect('menu_builder', menu_id=create_menu.id)
+    return redirect('menu_builder', menu_id=current_menu.id)
+
+def delete_menu(request, menu_id):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
+    menu_to_delete = Menu.objects.get(id=menu_id)
+    menu_to_delete.delete()
+
+    return redirect('welcome')
 
 
 
-# Create your views here.
-# menu, day, tag
-# menu CRUD:    create, read, update, delete, COPY
-# day CRUD:     create, read, update, delete, COPY--- give an alert, saying if you change this it will change all others(if they reuse a component instead of create a copy, give them the option to create a copy instead)
-# tag CRUD:     create, read, delete (don't need to update do I???)
+# In progress
+# Tag Functionality-- create new tag (to be added later)
+# def create_tag(request, menu_id):
+#     current_menu = Menu.objects.get(id=menu_id)
+#     new_tag = Tag.objects.create (
+#         tag_name = request.POST['tag_name']
+#     )
+#     new_tag.menus.add(current_menu)
+
+#     return redirect('menu_builder', menu_id=current_menu.id)
+
+
+# Tag functionality-- display tag form (to be added later)
+# def new_tag(request):
+#     return render(request, 'new_tag.html')

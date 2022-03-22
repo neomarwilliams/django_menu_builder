@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="blue-background row navbar">
+        <div class="green-background row navbar">
             <div class="col-6">
                 <h1>Welcome, {{logged_user.f_name}}!</h1>
             </div>
@@ -39,48 +39,51 @@
         </div>
         <div>
             <div class="row">
-                <div class="col-6">
-                    <h1>Quick Start</h1>
-                </div>
-                <div class="col-6">
-                    <p><a href="http://localhost:8000/menus/new/">Create a new menu</a></p>
-                    <p><a href="">Customize existing menu</a></p>
-                </div>
-            </div>
-            <div class="row">
                 <h2>My Menus</h2>
-                
                 <table class="table table-hover">
                     <thead>
                         <th>Menu Name</th>
-                        <th># of days</th>
-                        <th>Tags</th>
+                        <th>Note</th>
+                        <!-- add back when day count is added -->
+                        <!-- <th># of days</th> -->
+                        <!-- Add back when tag functionality is added -->
+                        <!-- <th>Tags</th> -->
                         <th>Actions</th>
                     </thead>
                     <tbody>
                         {% for menu in my_menus %}
-                        <!-- This will need some editing, passing context in, only pass the menus that are associated with a particular user -->
-                        <!-- for loop logic here -->
                         <tr>
                             <td>{{menu.menu_name}}</td>
-                            <td>
-                                {% for day in menu.days.all %}
-                                var counter ++
-                                {% endfor %}
-                                {{counter}}</td>
-
-                            <td>
+                            <td>{{menu.note}}</td>
+                            <!-- add back when day count is added -->
+                            <!-- <td>
+                                {{num_of_days}}
+                            </td> -->
+                            <!-- Add back when tag functionality is added -->
+                            <!-- <td>
                                 {% for tag in menu.tags.all %}                                
                                 <span>{{tag.tag_name}}</span>
                                 {% endfor %}
+                            </td> -->
+                            <td class="list-inline">
+                                <div class="list-inline-item">
+                                    <p><a href="http://localhost:8000/menus/{{menu.id}}/" class="btn blue-background">View</a></p>
+                                </div>
+                                <div class="list-inline-item">
+                                    <p><a href="http://localhost:8000/menus/menu_builder/{{menu.id}}" class="btn blue-background">Dashboard</a></p>
+                                </div>
+                                <!-- add back when template functionality is added -->
+                                <!-- <div class="list-inline-item">
+                                    <p><a href="#" class="btn blue-background">Use as Template</a></p>
+                                </div> -->
+                                <div class="list-inline-item">
+                                    <form action="http://localhost:8000/menus/delete/{{menu.id}}/" method="post" name="delete_menu">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn purple-background">Remove</button>
+                                    </form>
+                                </div>
+                                
                             </td>
-                            <td>
-                                <a href="#" class="btn blue-background">View</a>
-                                <a href="http://localhost:8000/menus/menu_builder/{{menu.id}}" class="btn blue-background">Edit</a>
-                                <a href="#" class="btn blue-background">Use as Template</a>
-                            </td>
-
-                            <!-- <td>{{menu.created_by}}</td> -->
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -92,16 +95,26 @@
                     <thead>
                         <th>Recipe Name</th>
                         <th>link to recipe</th>
+                        <th>Recipe Types</th>
                         <th>on these menus</th>
                     </thead>
                     <tbody>
                         {% for recipe in my_recipes%}
                         <tr>
-                            <td>{{recipe.name}}</td>
+                            <td>{{recipe.title}}</td>
+                            {% if recipe.link %}
                             <td><a href="{{recipe.link}}">{{recipe.link}}</a></td>
+                            {% else %}
+                            <td></td>
+                            {% endif %}
+                            <td>
+                                {% for recipe_type in recipe.recipe_types.all %}
+                                    <span>{{recipe_type.type_name}} | </span>
+                                {% endfor %}
+                            </td>
                             <td>
                                 {% for menu in recipe.menus.all %}
-                                <span>{{menu.menu_name}}</span>
+                                <span>{{menu.menu_name}} | </span>
                                 {% endfor %}
                             </td>
                         </tr>

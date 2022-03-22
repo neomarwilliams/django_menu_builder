@@ -11,7 +11,7 @@
 </head>
 <body>
     <div class="container-fluid">
-        <div class="blue-background row navbar">
+        <div class="green row navbar">
             <div class="col-6">
                 <h1>Menu Builder Dashboard</h1>
             </div>
@@ -37,19 +37,19 @@
                 </ul>
             </div>
         </div>
-        <div class="row">
+        <div class="row" id="dashboard_how_tos">
             <h3>Dashboard How Tos</h3>
             <div class="card col-4">
                 <div class="card-body">
-                    <h5 class="card-title green">General Instructions:</h5>
-                    <p class="card-text">Days are the building blocks of the dashboard. Click add day to get started. You can as many or as few days as you want!</p>
-                    <p class="card-text">After adding a day you have access to other menu actions.</p>
-                    <p class="card-text"><span class="fw-bold">Note: </span>DELETE permanently removes that item (day or recipe) from your menu.</p>
+                    <h5 class="card-title blue-w-padding">General Instructions:</h5>
+                    <p class="card-text">Days are the building blocks of your menu. Add them to your menu frame to start planning!</p>
+                    <p class="card-text">Menus are highly customizable. There is no limit to the number of days or recipes you can add.</p>
+                    <p class="card-text"><button class="btn purple-background">Remove</button> permanently deletes an item. This action cannot be undone.</p>
                 </div>
             </div>
             <div class="card col-4 offset-1">
                 <div class="card-body">
-                    <h5 class="card-title green">Adding a meal</h5>
+                    <h5 class="card-title blue-w-padding">Adding a meal</h5>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between align-items-start">
                             <div class="ms-2 me-auto">
@@ -75,32 +75,31 @@
                                 Categorizes recipes for future use
                             </div>
                         </li>
-                        <!-- <li>Add tags to the menu</li> -->
                     </ul>
                 </div>
             </div>
         </div>
+        <div class="green row navbar"></div>
         <div class="row line"></div>
-        <div class="row d-flex align-items-start">
-            <div class="col-3">
-                <h1>{{ current_menu.menu_name }}: </h1>
+        <div class="row d-flex align-items-start justify-content-between" id="dashboard">
+            <div class="col">
+                <h1>{{ current_menu.menu_name }} </h1>
                 <p>{{current_menu.note}}</p>
             </div>
-            <div class="col">
-
+            <div class="list-inline col">
+                <div class="list-inline-item">
+                    <p><a href="http://localhost:8000/menus/{{current_menu.id}}/" class="btn blue-background">Preview</a></p>
+                </div>
+                <div class="list-inline-item">
+                    <p><a class="btn blue-background" href="http://localhost:8000/menus/edit/{{current_menu.id}}/">Edit Menu Frame</a></p>
+                </div>
+                <div class="list-inline-item">
+                    <form action="http://localhost:8000/menus/day/create/{{current_menu.id}}/" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn blue-background">Add Day</button>
+                    </form>
+                </div>
             </div>
-            <div class="col-1">
-                <p><a class="btn blue-background" href="http://localhost:8000/menus/edit/{{current_menu.id}}/">Edit Menu</a></p>
-            </div>
-            <div class="col-1 offset-1">
-                <form action="http://localhost:8000/menus/day/create/{{current_menu.id}}/" method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="btn blue-background">Add Day</button>
-                </form>
-            </div>
-            <div class="col"></div>
-
-
             <!-- For adding tag and functionality -->
             <!-- <button class="btn blue-background">Add Tag</button> -->
             <!-- <p> 
@@ -113,11 +112,15 @@
         <div class="row">
             {% for day in days %}
             <div class="col-3 card">
-                <p class="btn btn-danger">
+                <form action="http://localhost:8000/menus/{{day.menu.id}}/day/delete/{{day.id}}/" method="post" name="delete_recipe">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete This Day</button>
+                </form>
+                <!-- <p class="btn btn-danger">
                     <a href="http://localhost:8000/menus/{{day.menu.id}}/day/delete/{{day.id}}/">
                         Delete This Day
                     </a>
-                </p>
+                </p> -->
                 <p class="btn btn-secondary">
                     <a href="http://localhost:8000/recipes/new/{{current_menu.id}}/{{day.id}}/" >
                         Add Meal
@@ -191,10 +194,8 @@
             {% endfor %}
         </div>
     </div>
-    <!-- What does a menu builder need?
-    ability to add a day
-    ability to add a recipe to a day
-    ability to add a tag to a menu 
-    (do a think where you make a container that will hold the day (for each day in menu.days make a div)) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 </body>
 </html>

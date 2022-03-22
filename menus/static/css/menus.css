@@ -10,10 +10,27 @@
     text-decoration: none;
 }
 
+.green-background {
+    background-color: #72CC50;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.purple-background {
+    background-color: #CC99FF;
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
 .nav-link {
     color: #FFFFFF;
 }
 
+.blue-w-padding{
+    background-color: #00AEAD;
+    color: #FFFFFF;
+    padding: 30px;
+}
 .green{
     background-color: #72CC50;
     color: #FFFFFF;
@@ -26,11 +43,23 @@ h3 {
     padding-top: 10px;
 }
 
+.form-spacing {
+    padding-bottom: 10px;
+}
+
 .line {
     height: 1px;
     background-color: #CC99FF;
-    margin-top: 50px;
 }
+
+#dashboard_how_tos {
+    margin-bottom: 40px;
+}
+
+#dashboard {
+    min-height: 600px;
+}
+
 .breakfast{
     background-color: orange;
     color: white;

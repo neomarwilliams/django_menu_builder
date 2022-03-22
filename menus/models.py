@@ -38,8 +38,14 @@ class Menu(models.Model):
     tags = models.ManyToManyField(Tag, related_name='menus')
     objects = MenuManager()
 
+    # def day_counter():
+    #     counter = 0
+    #     day_list = this.days.all()
 
+    #     for day in day_list:
+    #         counter += 1
 
+    #     return counter
 
 
 class Day(models.Model):

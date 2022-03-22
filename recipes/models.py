@@ -1,5 +1,5 @@
 from django.db import models
-from menus.models import Day
+from menus.models import Day, Menu
 
 
 
@@ -35,6 +35,7 @@ class Recipe(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     days = models.ManyToManyField(Day, related_name = 'recipes')
     recipe_types = models.ManyToManyField(RecipeType, related_name = 'recipes')
+    menus = models.ManyToManyField(Menu, related_name='recipes')
     objects = RecipeManager()
 
 
