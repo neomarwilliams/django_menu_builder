@@ -38,6 +38,62 @@
                 <h6>{{current_menu.note}}</h6>
             </div>
             <div class="row row-cols-1 row-cols-md-3 g-4">
+                <!-- <div class="card-group"> -->
+                    {% for day in days %}
+                    <div class="com">
+                        <div class="card h-100">
+                            <div class="card-header day-card-header">
+                                <ul class="nav nav-tabs card-header-tabs" id="menu_day_{{day.id}}" role="tablist">
+                                    {% for meal in day.meals.all %}
+                                        {% if meal == day.meals.all.0 %}
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="#{day.id}}/{{meal.meal_name}}" role="tab" aria-controls="{day.id}}/{{meal.meal_name}}" aria-selected="true">{{meal.meal_name}}</a>
+                                        </li>
+                                        {% else %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="#{{day.id}}/{{meal.meal_name}}" role="tab" aria-controls="{{day.id}}/{{meal.meal_name}}" aria-selected="false">{{meal.meal_name}}</a>
+                                        </li>
+                                        {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Recipes:</h5>
+                                {% for meal in day.meals.all %}
+                                <div class="tab-content mt-3">
+                                    {% if meal == day.meals.all.0 %}
+                                        <div class="tab-pane-active" id='{{day.id}}/{{meal.meal_name}}' role="tabpanel">
+                                            {% for recipe in day.recipes.all %}
+                                                {% for sub_meal in recipe.meals.all %}
+                                                    {% if sub_meal.id == meal.id %}
+                                                        <p class="card-text">{{recipe.title}}</p>
+                                                        <p class="card-tex"><a href="{{recipe.link}}" class="recipe-link">{{recipe.link}}</a></p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </div>
+                                    {% else %}
+                                        <div class="tab-pane" id='{{day.id}}/{{meal.meal_name}}' role="tabpanel">
+                                            {% for recipe in day.recipes.all %}
+                                                {% for sub_meal in recipe.meals.all %}
+                                                    {% if sub_meal.id == meal.id %}
+                                                        <p class="card-text">{{recipe.title}}</p>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                        </div>
+                    </div>
+    
+                    {% endfor %}
+                </div>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
                 {% for day in days %}
                 <div class="col">
                     <div class="card h-100">

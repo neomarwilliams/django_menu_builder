@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 from . models import *
 from log_and_reg.models import User
-from recipes.models import Recipe
+from recipes.models import Recipe, MealType
 from django.contrib import messages
 
 # CRUD commands for menus, and day objects
@@ -69,6 +69,60 @@ def display_home(request):
     return render(request, 'home.html', context)
 
 # shows menu builder dashboard page
+def display_menu_builder_with_cards(request, menu_id, meal_type_id, day_id):
+
+    if 'userid' not in request.session:
+        return redirect('/')
+
+    current_menu = Menu.objects.get(id=menu_id)
+    days = Day.objects.filter(menu=current_menu)
+    current_day = Day.objects.get(id=day_id)
+    current_meal = MealType.objects.get(id=meal_type_id)
+
+    recipes_by_day = current_day.recipes.all()
+    recipe_tab_list = {}
+
+    # make a list of all of the mealtypes assigned to a day. 
+    for day in days:
+        meals_of_day = day.meals.all()
+        for meal_type in meals_of_day:
+            recipe_list = []
+            for recipe in recipes_by_day:
+                recipe_sorter = recipe.meals.all()
+                for meal in recipe_sorter:
+                    if meal.id == meal_type.id:
+                        recipe_list.append(recipe)
+            recipe_tab_list['meal_type.meal_name'] = recipe_list
+    
+    meals_of_day = current_day.meals.all()
+    
+    for recipe in recipes_by_day:
+        # print(recipe)
+        recipe_sorter = recipe.meals.all()
+        # print(recipe_sorter)
+        for meal in recipe_sorter:
+            # print(meal.id)
+            # print(meal_type_id)
+            if meal.id == meal_type_id: 
+                recipe_tab_list.append(recipe)
+    # days = current_menu.days.all()
+
+    recipe_list = []
+    for recipe in recipe_tab_list:
+        print(recipe.title)
+        recipe_list.append(recipe.title)
+
+    print('WORKING HERE')
+    print(recipe_list)
+    context = {
+        'current_menu': current_menu,
+        'recipe_tab': recipe_tab_list,
+        'recipe_list': recipe_list,
+        'days': days,
+    }
+
+    return render(request, 'menu_builder.html', context)
+
 def display_menu_builder(request, menu_id):
 
     if 'userid' not in request.session:
@@ -77,9 +131,38 @@ def display_menu_builder(request, menu_id):
     current_menu = Menu.objects.get(id=menu_id)
     days = Day.objects.filter(menu=current_menu)
     # days = current_menu.days.all()
+
+    whole_menu_tab_list = []
+    day_tab_list = []
+
+    # ugh this is the worst 
+    # make a list of all of the mealtypes assigned to a day. 
+    for day in days:
+        meals_of_day = day.meals.all()
+        recipes_of_day = day.recipes.all()
+        for meal_type in meals_of_day:
+            recipe_list = []
+            for recipe in recipes_of_day:
+                recipe_sorter = recipe.meals.all()
+                for meal in recipe_sorter:
+                    if meal.id == meal_type.id:
+                        recipe_list.append(recipe)
+            
+            # (I can just put the labels on the cards from the day. no prob)
+            # print(meal_type.meal_name)
+            # print(recipe_list)
+            day_tab_list.append(recipe_list)
+            print('ONE DAY HERE')
+            print(day_tab_list)
+        whole_menu_tab_list.append(day_tab_list)
+
+
+    print('WHOLE MENU')
+    print(whole_menu_tab_list)
     context = {
         'current_menu': current_menu,
-        'days': days
+        'days': days, 
+        'whole_menu_tab_list': whole_menu_tab_list,
     }
     return render(request, 'menu_builder.html', context)
 
